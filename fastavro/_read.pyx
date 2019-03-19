@@ -432,7 +432,10 @@ cdef read_union(fo, writer_schema, reader_schema=None):
             (writer_schema, reader_schema)
         raise SchemaResolutionError(msg)
     else:
-        return _read_data(fo, writer_schema[index])
+        result = _read_data(fo, writer_schema[index])
+        if isinstance(result, dict):
+            result["_schema"] = writer_schema[index]["name"]
+        return result
 
 
 cdef read_record(fo, writer_schema, reader_schema=None):
